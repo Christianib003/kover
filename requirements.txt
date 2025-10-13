@@ -1,0 +1,14 @@
+tensorflow
+transformers
+datasets
+evaluate
+scikit-learn
+pandas
+numpy
+matplotlib
+gradio
+rank-bm25
+faiss-cpu
+pyyaml
+tqdm
+streamlit
