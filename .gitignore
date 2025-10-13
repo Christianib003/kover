@@ -1,4 +1,4 @@
-# Util files
+# Utility files
 project_cards.md
 
 # Cache files
@@ -13,3 +13,13 @@ hf_cache/
 *.h5
 *.pb
 checkpoint/
+
+
+*.pyc
+.env
+data/raw/
+data/processed/
+results/checkpoints/
+results/logs/
+.DS_Store
+.ipynb_checkpoints/
