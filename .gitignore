@@ -1,0 +1,15 @@
+# Util files
+project_cards.md
+
+# Cache files
+__pycache__/
+
+# Environment files
+.venv
+
+# Hugging Face / TensorFlow
+cache/
+hf_cache/
+*.h5
+*.pb
+checkpoint/
