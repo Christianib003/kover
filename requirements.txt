@@ -1,5 +1,6 @@
-tensorflow
 transformers
+tensorflow-macos
+tensorflow-metal
 datasets
 evaluate
 scikit-learn
@@ -12,3 +13,5 @@ faiss-cpu
 pyyaml
 tqdm
 streamlit
+sentencepiece
+protobuf
