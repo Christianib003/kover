@@ -8,8 +8,8 @@ paths:
   plots_dir: results/plots
 model:
   name: google/flan-t5-small
-  max_source_len: 256
-  max_target_len: 128
+  max_source_len: 64
+  max_target_len: 384
 train:
   batch_size: 8
   num_epochs: 3
