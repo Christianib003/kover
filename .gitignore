@@ -1,0 +1,26 @@
+# Utility files
+project_cards.md
+
+# Cache files
+__pycache__/
+
+# Environment files
+.venv
+.env
+
+# Hugging Face / TensorFlow
+cache/
+hf_cache/
+*.h5
+*.pb
+checkpoint/
+
+
+*.pyc
+.env
+data/raw/
+data/processed/
+results/checkpoints/
+results/logs/
+.DS_Store
+.ipynb_checkpoints/

@@ -1,0 +1,7 @@
+tensorflow
+transformers
+datasets
+pandas
+streamlit
+sacrebleu
+wordcloud
