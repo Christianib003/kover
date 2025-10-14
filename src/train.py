@@ -6,10 +6,9 @@ def load_csv(proc_dir, split):
     return pd.read_csv(os.path.join(proc_dir, f"{split}_with_prompt.csv"))
 
 def make_ds(df, tok, max_src, max_tgt, batch):
-    X = tok(df["training_text"].tolist(), truncation=True, padding=True, max_length=max_src, return_tensors="tf")
-    y = tok(df["answer"].tolist(),        truncation=True, padding=True, max_length=max_tgt, return_tensors="tf")["input_ids"]
-    ds = tf.data.Dataset.from_tensor_slices((dict(X), {"labels": y}))
-    return ds.shuffle(2048).batch(batch).prefetch(tf.data.AUTOTUNE)
+    X = tok(df["source"].tolist(),  truncation=True, padding=True, max_length=max_src, return_tensors="tf")
+    y = tok(df["answer"].tolist(),  truncation=True, padding=True, max_length=max_tgt, return_tensors="tf")["input_ids"]
+    return tf.data.Dataset.from_tensor_slices((dict(X), {"labels": y})).shuffle(2048).batch(batch).prefetch(tf.data.AUTOTUNE)
 
 def main(cfg_path, override_model=None, epochs=None, lr=None, out_dir=None):
     cfg = load_config(cfg_path)
@@ -33,7 +32,7 @@ def main(cfg_path, override_model=None, epochs=None, lr=None, out_dir=None):
     train_ds = make_ds(train_df, tok, max_src, max_tgt, batch_size)
     val_ds   = make_ds(val_df, tok, max_src, max_tgt, batch_size)
 
-    opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+    opt = tf.keras.optimizers.legacy.Adam(learning_rate=learning_rate)
     model.compile(optimizer=opt)
 
     ckpt = tf.keras.callbacks.ModelCheckpoint(os.path.join(save_dir, "best.keras"), save_best_only=True, monitor="val_loss")

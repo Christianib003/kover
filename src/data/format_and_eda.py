@@ -2,10 +2,11 @@ import os, argparse, json, pandas as pd, numpy as np, matplotlib.pyplot as plt
 from transformers import AutoTokenizer
 
 
-def add_prompt(df: pd.DataFrame) -> pd.DataFrame:
+def add_prompt(df):
     df = df.copy()
-    df["training_text"] = "question: " + df["question"].str.strip() + " answer: " + df["answer"].str.strip()
+    df["source"] = "question: " + df["question"].str.strip()
     return df
+
 
 def tok_lengths(texts, tok, max_len=1024):
     return [len(tok(t, truncation=True, max_length=max_len)["input_ids"]) for t in texts]
@@ -28,7 +29,7 @@ def main(proc_dir: str, model_name: str, plots_dir: str, logs_dir: str):
     tok = AutoTokenizer.from_pretrained(model_name)
     q_lens = tok_lengths(train["question"].tolist(), tok)
     a_lens = tok_lengths(train["answer"].tolist(), tok)
-    t_lens = tok_lengths(train["training_text"].tolist(), tok)
+    t_lens = tok_lengths(train["source"].tolist(), tok)
 
     stats = {
         "rows": {"train": len(train), "val": len(val), "test": len(test)},
@@ -43,7 +44,7 @@ def main(proc_dir: str, model_name: str, plots_dir: str, logs_dir: str):
 
     plot_hist(q_lens, "Question token lengths", os.path.join(plots_dir, "q_token_lengths.png"))
     plot_hist(a_lens, "Answer token lengths",   os.path.join(plots_dir, "a_token_lengths.png"))
-    plot_hist(t_lens, "Prompt token lengths",   os.path.join(plots_dir, "training_text_lengths.png"))
+    plot_hist(t_lens, "Prompt token lengths",   os.path.join(plots_dir, "source_lengths.png"))
 
     os.makedirs(logs_dir, exist_ok=True)
     with open(os.path.join(logs_dir, "clean_stats.json"), "w") as f: json.dump(stats, f, indent=2)
