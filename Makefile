@@ -1,4 +1,4 @@
-.PHONY: data app format model
+.PHONY: data app format model train train-flan
 PY=python
 
 data:
@@ -9,6 +9,9 @@ format:
 
 train:
 	$(PY) -m src.train --config configs/base.yaml --model t5-small
+
+train-flan:
+	$(PY) -m src.train --config configs/base.yaml --model google/flan-t5-small --run_name flan_t5small_baseline
 
 model:
 	TOKENIZERS_PARALLELISM=false OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES $(PY) -c "from src.models.model_setup import get_model_and_tokenizer as f; m,t=f('t5-small'); print('ok')"
