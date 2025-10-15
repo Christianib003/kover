@@ -1,0 +1,46 @@
+# Makefile for the InsuranceQA Chatbot Project
+
+# --- Variables ---
+PYTHON := .env/bin/python # Or the name of your venv folder
+
+# --- Targets ---
+
+# Default target that runs when you just type 'make'
+all: train-baseline
+
+# Sets up the environment by installing dependencies
+setup:
+	@echo "Setting up the environment..."
+	$(PYTHON) -m pip install -r requirements.txt
+
+# Trains the baseline model with default hyperparameters
+train-baseline:
+	@echo "Training the baseline model..."
+	TF_USE_LEGACY_KERAS=True $(PYTHON) src/train.py \
+		--model_name "baseline_model" \
+		--epochs 3 \
+		--batch_size 8 \
+		--learning_rate 2e-5
+
+# Trains the model for the learning rate experiment
+train-lr-experiment:
+	@echo "Training the learning rate experiment model..."
+	TF_USE_LEGACY_KERAS=True $(PYTHON) src/train.py \
+		--model_name "lr_experiment_model" \
+		--epochs 3 \
+		--batch_size 8 \
+		--learning_rate 5e-5
+
+# A placeholder for running the Streamlit app later
+app:
+	@echo "Starting the Streamlit application..."
+	# We will add the command here in a later card
+	@echo "App command to be added."
+
+# Cleans up model artifacts (use with caution!)
+clean:
+	@echo "Cleaning up model directories..."
+	rm -rf models/baseline_model
+	rm -rf models/lr_experiment_model
+
+.PHONY: all setup train-baseline train-lr-experiment app clean

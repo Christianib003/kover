@@ -21,6 +21,7 @@ checkpoint/
 data/raw/
 data/processed/
 results/checkpoints/
+models/
 results/logs/
 .DS_Store
 .ipynb_checkpoints/
