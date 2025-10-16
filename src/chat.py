@@ -4,47 +4,64 @@ import argparse
 import tensorflow as tf
 from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 
-def main(args):
-    """Loads a fine-tuned model and allows user interaction."""
-    
-    # --- 1. Load the fine-tuned model and tokenizer ---
-    print(f"Loading model from: {args.model_dir}")
+def load_keywords(filepath: str) -> set:
+    """Loads a list of keywords from a text file into a set for fast lookup."""
     try:
-        model = TFT5ForConditionalGeneration.from_pretrained(args.model_dir)
-        tokenizer = T5Tokenizer.from_pretrained(args.model_dir)
-    except OSError:
-        print(f"Error: Model not found at {args.model_dir}. Make sure the directory is correct.")
+        with open(filepath, 'r') as f:
+            return set(line.strip() for line in f)
+    except FileNotFoundError:
+        print(f"Warning: Keyword file not found at {filepath}. OOD filter will be disabled.")
+        return set()
+
+class Chatbot:
+    def __init__(self, model_dir: str, keywords_path: str):
+        print(f"Loading model from: {model_dir}...")
+        self.keywords = load_keywords(keywords_path)
+        try:
+            self.model = TFT5ForConditionalGeneration.from_pretrained(model_dir)
+            self.tokenizer = T5Tokenizer.from_pretrained(model_dir)
+            print("\n✅ Chatbot is ready!")
+        except OSError:
+            print(f"Error: Model not found at {model_dir}.")
+            self.model = None
+
+    def _is_in_domain(self, question: str) -> bool:
+        """Checks if any keyword is present in the question."""
+        if not self.keywords: # If keyword list is empty, approve all questions
+            return True
+        return any(keyword in question.lower() for keyword in self.keywords)
+
+    def get_response(self, user_input: str) -> str:
+        """Generates a response, with a data-driven check for OOD questions."""
+        if not self._is_in_domain(user_input):
+            return "I apologize, but I am a specialized chatbot and can only answer questions related to insurance."
+        
+        prefixed_input = "question: " + user_input
+        inputs = self.tokenizer(prefixed_input, return_tensors="tf").input_ids
+        
+        outputs = self.model.generate(
+            inputs, max_length=512, num_beams=5, early_stopping=True
+        )
+        
+        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return response
+
+def main(args):
+    """Main function to start the chat loop."""
+    chatbot = Chatbot(args.model_dir, args.keywords_file)
+    if not chatbot.model:
         return
 
-    print("\n✅ Chatbot is ready! Type 'exit' to end the conversation.")
     print("---")
+    print("Type 'exit' to end the conversation.")
     
-    # --- 2. Start the conversation loop ---
     while True:
-        # Get user input from the terminal
         user_input = input("You: ")
-        
         if user_input.lower() == 'exit':
             print("Chatbot: Goodbye!")
             break
-            
-        # --- 3. Prepare the input for the model ---
-        # We use the same prefix as in training
-        prefixed_input = "question: " + user_input
-        inputs = tokenizer(prefixed_input, return_tensors="tf").input_ids
         
-        # --- 4. Generate a response ---
-        # Using parameters for better quality generation
-        outputs = model.generate(
-            inputs, 
-            max_length=512, 
-            num_beams=5, # beam search helps find better answers
-            early_stopping=True
-        )
-        
-        # --- 5. Decode and print the response ---
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        
+        response = chatbot.get_response(user_input)
         print(f"Chatbot: {response}")
         print("---")
 
@@ -53,8 +70,14 @@ if __name__ == '__main__':
     parser.add_argument(
         "--model_dir", 
         type=str, 
-        default="models/baseline_model", 
+        required=True, 
         help="Directory where the fine-tuned model is saved."
+    )
+    parser.add_argument(
+        "--keywords_file",
+        type=str,
+        default="data/processed/keywords.txt",
+        help="Path to the keyword file for OOD detection."
     )
     args = parser.parse_args()
     main(args)

@@ -6,3 +6,4 @@ streamlit
 sacrebleu
 wordcloud
 seaborn
+nltk
