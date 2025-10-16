@@ -25,3 +25,7 @@ models/
 results/logs/
 .DS_Store
 .ipynb_checkpoints/
+
+
+# Deplyment files
+deployment/

@@ -40,6 +40,11 @@ train-final:
 		--batch_size 16 \
 		--learning_rate 5e-5
 
+# Evaluates the champion model on the test set
+evaluate:
+	@echo "Evaluating the champion model on the test set..."
+	TF_USE_LEGACY_KERAS=True $(PYTHON) src/run_evaluation.py --model_dir "models/lr_experiment_model"
+
 # Runs the Streamlit application
 app:
 	@echo "Starting the Streamlit application..."
