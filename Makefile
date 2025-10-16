@@ -31,6 +31,15 @@ train-lr-experiment:
 		--batch_size 8 \
 		--learning_rate 5e-5
 
+# Trains the final, optimized model
+train-final:
+	@echo "Training the final, optimized model..."
+	TF_USE_LEGACY_KERAS=True $(PYTHON) src/train.py \
+		--model_name "final_model" \
+		--epochs 5 \
+		--batch_size 16 \
+		--learning_rate 5e-5
+
 # A placeholder for running the Streamlit app later
 app:
 	@echo "Starting the Streamlit application..."
@@ -42,5 +51,6 @@ clean:
 	@echo "Cleaning up model directories..."
 	rm -rf models/baseline_model
 	rm -rf models/lr_experiment_model
+
 
 .PHONY: all setup train-baseline train-lr-experiment app clean
