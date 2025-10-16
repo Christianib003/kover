@@ -40,11 +40,11 @@ train-final:
 		--batch_size 16 \
 		--learning_rate 5e-5
 
-# A placeholder for running the Streamlit app later
+# Runs the Streamlit application
 app:
 	@echo "Starting the Streamlit application..."
-	# We will add the command here in a later card
-	@echo "App command to be added."
+	@echo "Access the app at the URL provided in your terminal."
+	$(PYTHON) -m streamlit run app/main.py
 
 # Cleans up model artifacts (use with caution!)
 clean:
