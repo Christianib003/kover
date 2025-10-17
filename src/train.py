@@ -1,5 +1,3 @@
-# src/train.py
-
 import os
 import argparse
 from datasets import load_dataset
@@ -20,13 +18,11 @@ def preprocess_function(examples, tokenizer, max_length=512):
 def main(args):
     """Main function to run the training pipeline."""
     
-    # --- 1. Load Model and Tokenizer ---
     model, tokenizer = get_model_and_tokenizer("t5-small")
     if not model or not tokenizer:
         print("Exiting due to model loading failure.")
         return
 
-    # --- 2. Load and Preprocess Dataset ---
     print("Loading and preprocessing dataset...")
     raw_dataset = load_dataset("deccan-ai/insuranceQA-v2")
     original_columns = raw_dataset["train"].column_names
@@ -37,7 +33,6 @@ def main(args):
         remove_columns=original_columns
     )
     
-    # --- 3. Prepare for Training ---
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model, return_tensors="tf")
     
     train_dataset = tokenized_datasets["train"].to_tf_dataset(
@@ -56,21 +51,17 @@ def main(args):
         collate_fn=data_collator,
     )
     
-    # --- 4. Compile and Train with a Scheduler ---
     print("Compiling and training the model with a learning rate scheduler...")
     
-    # Calculate the total number of training steps for the scheduler
     num_train_steps = len(train_dataset) * args.epochs
     
-    # Use the create_optimizer function from Hugging Face to get AdamW with a linear decay scheduler
     optimizer, schedule = create_optimizer(
         init_lr=args.learning_rate,
-        num_warmup_steps=0, # No warmup needed for this task
+        num_warmup_steps=0,
         num_train_steps=num_train_steps,
-        weight_decay_rate=0.01, # Standard value for AdamW
+        weight_decay_rate=0.01,
     )
     
-    # The T5 model has a built-in loss function, so we only need to compile the optimizer
     model.compile(optimizer=optimizer)
 
     model.fit(
@@ -79,7 +70,6 @@ def main(args):
         epochs=args.epochs
     )
 
-    # --- 5. Save the Model ---
     output_dir = os.path.join("models", args.model_name)
     os.makedirs(output_dir, exist_ok=True)
     model.save_pretrained(output_dir)

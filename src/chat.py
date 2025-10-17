@@ -1,5 +1,3 @@
-# src/chat.py
-
 import argparse
 import tensorflow as tf
 from transformers import TFT5ForConditionalGeneration, T5Tokenizer
@@ -27,7 +25,7 @@ class Chatbot:
 
     def _is_in_domain(self, question: str) -> bool:
         """Checks if any keyword is present in the question."""
-        if not self.keywords: # If keyword list is empty, approve all questions
+        if not self.keywords:
             return True
         return any(keyword in question.lower() for keyword in self.keywords)
 

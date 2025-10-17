@@ -1,7 +1,6 @@
 import os
 from transformers import TFT5ForConditionalGeneration, T5Tokenizer
 
-# Disable parallelism and handle library conflicts
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 

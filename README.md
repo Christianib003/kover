@@ -41,7 +41,7 @@ The insurance industry is notoriously complex, with policy documents and termino
 ## 3. Demo
 
 A live demonstration of the final application can be viewed in the project's summary video:
-**[Link to Your Final Demo Video Here]**
+- **[Video Demo](https://youtu.be/p1jvTKdknns)**
 
 
 ## 4. Technology Stack
@@ -94,7 +94,7 @@ Follow these instructions to set up the environment and run the project on your 
 1.  **Clone the repository:**
 
     ```bash
-        git clone https://github.com/Christianib003/kover
+        git clone https://github.com/Christianib003/kover.git
         cd kover
     ```
 

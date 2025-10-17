@@ -1,5 +1,3 @@
-# src/evaluate.py
-
 import argparse
 import tensorflow as tf
 from datasets import load_dataset
@@ -11,16 +9,13 @@ def main(args):
     """
     Evaluates a fine-tuned model on a given dataset split using BLEU score.
     """
-    # --- 1. Load Model and Tokenizer ---
     model, tokenizer = get_model_and_tokenizer(args.model_dir)
     if not model or not tokenizer:
         return
 
-    # --- 2. Load and Prepare Dataset ---
     print(f"Loading '{args.split}' split of the dataset...")
     raw_dataset = load_dataset("deccan-ai/insuranceQA-v2", split=args.split)
     
-    # --- 3. Generate Predictions ---
     print("Generating predictions for the dataset...")
     predictions = []
     references = []
@@ -41,7 +36,6 @@ def main(args):
         predictions.append(prediction_text)
         references.append(reference_answer)
 
-    # --- 4. Calculate BLEU Score ---
     print("Calculating BLEU score...")
     bleu_metric = run_evaluation.load("bleu")
     results = bleu_metric.compute(predictions=predictions, references=references)
