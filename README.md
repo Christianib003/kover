@@ -66,15 +66,15 @@ The project is organized into a modular structure to enforce separation of conce
 │   ├── processed/              # Cleaned datasets and keyword file
 │   └── raw/                    # Original downloaded dataset files
 ├── models/
-│   ├── baseline\_model/
-│   └── lr\_experiment\_model/  # The final, best-performing model
+│   ├── baseline_model/
+│   └── lr_experiment_model/  # The final, best-performing model
 ├── notebooks/
-│   └── 01\_eda.ipynb           # Exploratory Data Analysis
+│   └── 01_eda.ipynb           # Exploratory Data Analysis
 ├── src/
 │   ├── chatbot.py              # Chatbot class with inference logic
-│   ├── generate\_keywords.py   # Script for OOD keyword generation
-│   ├── model\_setup.py         # Model and tokenizer loading
-│   ├── run\_evaluation.py      # Evaluation script (BLEU score)
+│   ├── generate_keywords.py   # Script for OOD keyword generation
+│   ├── model_setup.py         # Model and tokenizer loading
+│   ├── run_evaluation.py      # Evaluation script (BLEU score)
 │   └── train.py                # Model training script
 ├── Makefile                    # Commands for easy project management
 ├── requirements.txt            # Project dependencies
